@@ -1,0 +1,29 @@
+name: MaltaShop CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  docker-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker services
+        run: docker compose build
+
+      - name: Start services
+        run: docker compose up -d
+
+      - name: Check Order Service
+        run: curl --fail --retry 10 --retry-delay 3 --retry-connrefused http://localhost:8000/health
+
+      - name: Check Notification Service
+        run: curl --fail --retry 10 --retry-delay 3 --retry-connrefused http://localhost:8001/health
+
+      - name: Stop services
+        if: always()
+        run: docker compose down
