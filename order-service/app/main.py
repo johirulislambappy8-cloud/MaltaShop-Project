@@ -1,9 +1,10 @@
 
-import pika
 import json
+from uuid import uuid4
+
+import pika
 from fastapi import FastAPI
 from pydantic import BaseModel
-from uuid import uuid4
 
 app = FastAPI(title="MaltaShop Order Service")
 
@@ -56,3 +57,4 @@ def create_order(order: OrderRequest):
         "quantity": order.quantity,
         "status": "created"
     }
+
